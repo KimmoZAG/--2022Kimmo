@@ -75,5 +75,11 @@
     "files.exclude": {
         "**/*.exe": true,       
       },
+      "[cpp]": {
+        "files.encoding": "gbk"    
+        },
+        "[c]": { 
+        "files.encoding": "gbk"
+        },  
     "C_Cpp.errorSquiggles": "EnabledIfIncludesResolve"
 }
