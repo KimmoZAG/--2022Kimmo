@@ -132,6 +132,8 @@ int bfs()
 }
 ```
 
+***
+
 ## 三、最短路径算法
 
 ### 单源最短路径算法
@@ -168,8 +170,92 @@ SPFA由Bellman-Ford算法优化而来，可以处理带负权的图，下面对�
 实际的代码实现如下：
 
 ```C++
-    
+int spfa()
+{
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= n; j++)
+        {
+            cout << tu[i][j] << " ";
+        }
+        cout << endl;
+    }
+    memset(visit, false, sizeof(visit));
+    queue_point.push(1);
+    visit[1] = true;
+    dis[1] = 0;
+    while (!queue_point.empty())
+    {
+        int t = queue_point.front();
+        queue_point.pop();
+        visit[t] = false;
+        for (int i = 1; i <= n; i++)
+        {
+            if (tu[t][i] != 0x3f3f3f3f)
+            {   
+                if (dis[i] > dis[t] + tu[t][i])
+                {
+                    dis[i] = dis[t] + tu[t][i];
+                    if (!visit[i])
+                    {
+                        queue_point.push(i);
+                        visit[i] = true;
+                    }
+                }
+            }
+        }
+    }
+    return dis[n];
+}
 ```
 
 那为什么有的时候看spfa的代码会有点懵呢，因为其定义了邻接表（数据结构会讲）作为存储图的路径
 具体可以看看这个博客：<https://blog.csdn.net/czsupercar/article/details/88735143>
+
+#### 2.Dij——迪杰斯特拉算法
+
+dij的实现思路大致可以参考一下视频
+<https://www.bilibili.com/video/BV1QK411V7V4?from=search&seid=11772333812494729653&spm_id_from=333.337.0.0>
+
+实际算法执行过程中，我们创建：
+
+```C++
+    两个一维数组，  一个int型，用于存储源点到各个节点的最短距离（dis）
+                   一个bool型，用于标记节点是否被遍历过
+    一张图，        一个二维数组，用于记录各个节点到其相邻节点的距离
+```
+
+dij代码实现过程中的难点在于 对遍历各个节点并更新最短距离的逻辑 的理解
+
+```C++
+int dij()
+{
+    int min_path, mid_point;
+    point[s] = true;
+    for (int i = 1; i <= n; i++)
+    {
+        dis[i] = tu[s][i];
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        min_path = 0x3f3f3f3f;
+        for (int j = 1; j <= n; j++)
+        {
+            if (!point[j] && min_path > dis[j])
+            {
+                min_path = dis[j];
+                mid_point = j;
+            }
+        }
+        point[mid_point] = true;
+        for (int j = 1; j <= n; j++)
+        {
+            if (!point[j] && dis[j] > tu[mid_point][j] + dis[mid_point])
+            {
+                dis[j] = tu[mid_point][j] + dis[mid_point];
+            }
+        }
+    }
+    return dis[t];
+}
+```
